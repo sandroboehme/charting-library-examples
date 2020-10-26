@@ -6,6 +6,7 @@ import {
     LanguageCode,
     ResolutionString,
 } from '../../assets/charting_library/charting_library.min';
+import { Datafeed } from './datafeed';
 
 @Component({
     selector: 'app-tv-chart-container',
@@ -13,8 +14,8 @@ import {
     styleUrls: ['./tv-chart-container.component.css']
 })
 export class TvChartContainerComponent implements OnInit, OnDestroy {
-    private _symbol: ChartingLibraryWidgetOptions['symbol'] = 'AAPL';
-    private _interval: ChartingLibraryWidgetOptions['interval'] = 'D' as ResolutionString;
+    private _symbol: ChartingLibraryWidgetOptions['symbol'] = 'Binance:BTC/USDT'; // 'AAPL';
+    private _interval: ChartingLibraryWidgetOptions['interval'] = '1' as ResolutionString;
     // BEWARE: no trailing slash is expected in feed URL
     private _datafeedUrl = 'https://demo_feed.tradingview.com';
     private _libraryPath: ChartingLibraryWidgetOptions['library_path'] = '/assets/charting_library/';
@@ -92,7 +93,8 @@ export class TvChartContainerComponent implements OnInit, OnDestroy {
 
         const widgetOptions: ChartingLibraryWidgetOptions = {
             symbol: this._symbol,
-            datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(this._datafeedUrl),
+            // datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(this._datafeedUrl),
+            datafeed: new Datafeed(),
             interval: this._interval,
             container_id: this._containerId,
             library_path: this._libraryPath,

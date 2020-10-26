@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "./node_modules/.bin/ng serve --proxy-config proxy.conf.js",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
@@ -22,7 +22,10 @@
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
     "core-js": "^2.4.1",
-    "zone.js": "^0.8.26"
+    "zone.js": "^0.8.26",
+    "socket.io": "~1.7.2",
+    "@types/socket.io-client": "~1.4.32",
+    "ccxt": "^1.36.1"
   },
   "devDependencies": {
     "@angular/cli": "~1.7.4",
