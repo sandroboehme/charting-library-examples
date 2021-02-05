@@ -1,6 +1,7 @@
-import { generateSymbol, makeApiRequest, parseFullSymbol } from './helpers';
+import { generateSymbol, makeApiRequest, parseFullSymbol, getBars } from './helpers';
 import { subscribeOnStream, unsubscribeFromStream } from './streaming';
 import ccxt from 'ccxt';
+import { ServerService } from './server.service';
 
 // see https://github.com/tradingview/charting_library/wiki/JS-Api#onreadycallback
 const configurationData = {
@@ -42,6 +43,8 @@ const lastBarsCache = new Map();
 
 export class Datafeed {
 
+  constructor(private server: ServerService) {
+  }
   /**
    * @see https://github.com/tradingview/charting_library/wiki/JS-Api#onreadycallback
    * @param callback
@@ -108,7 +111,7 @@ export class Datafeed {
       .map(name => `${name}=${encodeURIComponent(urlParameters[name])}`)
       .join('&');
     try {
-
+/*
       const exchangeId = 'binance'
         , exchangeClass = ccxt[exchangeId]
         , binance = new exchangeClass ({
@@ -124,31 +127,32 @@ export class Datafeed {
       // const ohlcv = await binance.fetchOHLCV(symbolInfo.name, '1m');
       const ohlcv = await binance.fetchOHLCV(symbolInfo.name, '1m', from * 1000, 1000, params);
       console.log('binance ohlc: ', ohlcv);
-
-      const data = await makeApiRequest(`data/histoday?${query}`);
+*/
+      const data = this.server.getBars();
       console.log('data: ', data);
       /*
-       */
       if (data.Response && data.Response === 'Error' || data.Data.length === 0) {
         // "noData" should be set if there is no data in the requested period.
         onHistoryCallback([], { noData: true });
         return;
       }
+       */
       /*
        */
-      let cbars = [];
-      data.Data.forEach(bar => {
-        if (bar.time >= from && bar.time < to) {
-          cbars = [...cbars, {
-            time: bar.time * 1000,
-            low: bar.low,
-            high: bar.high,
-            open: bar.open,
-            close: bar.close,
+      let bars = [];
+      data.forEach(bar => {
+        if (bar[0] >= from && bar[0] < to) {
+          bars = [...bars, {
+            time: bar[0], // * 1000,
+            low: bar[3],
+            high: bar[2],
+            open: bar[1],
+            close: bar[4],
           }];
         }
       });
-      let bars = [];
+      /*
+      let cbars = [];
       ohlcv.forEach(bar => {
         if (bar[0] >= (from * 1000) && bar[0] < (to * 1000)) {
           bars = [...bars, {
@@ -160,6 +164,7 @@ export class Datafeed {
           }];
         }
       });
+       */
       if (firstDataRequest) {
         lastBarsCache.set(symbolInfo.full_name, { ...bars[bars.length - 1] });
       }

@@ -8,6 +8,17 @@ export async function makeApiRequest(path) {
   }
 }
 
+// Make requests to CryptoCompare API
+export async function getBars() {
+  try {
+
+    const response = await fetch(`http://127.0.0.1:8000/get-bars`);
+    return response.json();
+  } catch (error) {
+    throw new Error(`CryptoCompare request error: ${error.status}`);
+  }
+}
+
 /*
 export async function callBinanceFetch() {
 

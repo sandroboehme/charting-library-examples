@@ -7,6 +7,7 @@ import {
     ResolutionString,
 } from '../../assets/charting_library/charting_library.min';
 import { Datafeed } from './datafeed';
+import { ServerService } from './server.service';
 
 @Component({
     selector: 'app-tv-chart-container',
@@ -83,6 +84,9 @@ export class TvChartContainerComponent implements OnInit, OnDestroy {
         this._containerId = containerId || this._containerId;
     }
 
+    constructor(private server: ServerService) {
+    }
+
     ngOnInit() {
         function getLanguageFromURL(): LanguageCode | null {
             const regex = new RegExp('[\\?&]lang=([^&#]*)');
@@ -94,7 +98,7 @@ export class TvChartContainerComponent implements OnInit, OnDestroy {
         const widgetOptions: ChartingLibraryWidgetOptions = {
             symbol: this._symbol,
             // datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(this._datafeedUrl),
-            datafeed: new Datafeed(),
+            datafeed: new Datafeed(this.server),
             interval: this._interval,
             container_id: this._containerId,
             library_path: this._libraryPath,
